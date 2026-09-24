@@ -10,184 +10,257 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inject Custom CSS for Cinematic Dark Portfolio UI
+# Inject Custom CSS for Premium IMDb-Inspired Cinematic Dark Theme
 st.markdown("""
 <style>
-    /* Google Fonts import */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
     html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Main Container Background Styling */
+    /* Main Container Background */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        background: radial-gradient(circle at 50% 0%, #1a1e29 0%, #0b0d13 70%, #050608 100%);
         color: #f8fafc;
     }
 
-    /* Header Styling */
-    .main-header {
-        text-align: center;
-        padding: 2.5rem 1rem 1.5rem 1rem;
-        background: rgba(30, 41, 59, 0.7);
+    /* IMDb Header Styling */
+    .imdb-header-container {
+        background: linear-gradient(135deg, rgba(26, 30, 41, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
         border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
+        padding: 2rem 1.5rem;
+        border: 1px solid rgba(245, 197, 24, 0.25);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
     }
 
-    .main-header h1 {
-        font-size: 2.6rem;
+    .imdb-header-container::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f5c518, #e2b616, #f5c518);
+    }
+
+    .imdb-badge {
+        display: inline-block;
+        background: #f5c518;
+        color: #000000;
+        font-weight: 900;
+        font-size: 1.25rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        letter-spacing: -0.5px;
+        vertical-align: middle;
+        margin-right: 0.6rem;
+        box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
+    }
+
+    .main-title {
+        display: inline-block;
+        font-size: 2.3rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #f59e0b, #ef4444, #ec4899);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        vertical-align: middle;
     }
 
-    .main-header p {
+    .header-subtitle {
         color: #94a3b8;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
+        margin-top: 0.6rem;
         font-weight: 400;
-        max-width: 700px;
-        margin: 0 auto;
     }
 
     /* Section Cards */
-    .content-card {
-        background: rgba(30, 41, 59, 0.6);
+    .section-card {
+        background: rgba(22, 27, 38, 0.75);
         border-radius: 14px;
         padding: 1.5rem;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        height: 100%;
     }
 
-    /* Selected Movie Context Box */
+    .section-header-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #f5c518;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Selected Movie Context Banner */
     .movie-banner {
-        background: linear-gradient(90deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
-        border-left: 4px solid #f59e0b;
+        background: rgba(245, 197, 24, 0.08);
+        border-left: 4px solid #f5c518;
         padding: 0.75rem 1rem;
-        border-radius: 8px;
+        border-radius: 6px;
         margin-top: 0.5rem;
-        margin-bottom: 1.25rem;
-        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        font-size: 0.92rem;
         color: #fef3c7;
     }
 
-    /* Result Badges */
+    /* Result Cards */
+    .result-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 280px;
+        background: rgba(15, 23, 42, 0.4);
+        border: 2px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 2rem;
+        text-align: center;
+        color: #64748b;
+    }
+
     .result-card-positive {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
+        background: linear-gradient(145deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 78, 59, 0.25) 100%);
         border: 2px solid #10b981;
         border-radius: 14px;
-        padding: 1.8rem;
+        padding: 2.2rem 1.5rem;
         text-align: center;
-        box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
         animation: fadeIn 0.4s ease-in-out;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .result-card-negative {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+        background: linear-gradient(145deg, rgba(239, 68, 68, 0.18) 0%, rgba(127, 29, 29, 0.25) 100%);
         border: 2px solid #ef4444;
         border-radius: 14px;
-        padding: 1.8rem;
+        padding: 2.2rem 1.5rem;
         text-align: center;
-        box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
         animation: fadeIn 0.4s ease-in-out;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
-    .result-title {
-        font-size: 0.9rem;
+    .result-subtitle {
+        font-size: 0.85rem;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
+        letter-spacing: 2px;
         color: #94a3b8;
-        margin-bottom: 0.4rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
     }
 
     .result-badge-positive {
         color: #34d399;
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.75rem;
+
     }
 
     .result-badge-negative {
         color: #f87171;
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.75rem;
     }
 
     .result-explanation {
-        color: #e2e8f0;
-        font-size: 1.05rem;
-        margin-top: 0.5rem;
+        color: #f1f5f9;
+        font-size: 1.1rem;
+        max-width: 90%;
+        line-height: 1.5;
+        font-weight: 500;
     }
 
-    /* Metric Box Styling */
-    .metric-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+    /* Model Specifications Grid at Bottom */
+    .spec-card {
+        background: rgba(22, 27, 38, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         margin-top: 1rem;
     }
 
-    .metric-card {
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 0.75rem;
+    }
+
+    .metric-item {
+        background: rgba(11, 13, 19, 0.8);
+        border: 1px solid rgba(245, 197, 24, 0.2);
         border-radius: 10px;
-        padding: 0.85rem;
+        padding: 1rem;
         text-align: center;
     }
 
-    .metric-value {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #38bdf8;
+    .metric-val {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #f5c518;
     }
 
-    .metric-label {
+    .metric-lbl {
         font-size: 0.8rem;
         color: #94a3b8;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.8px;
+        margin-top: 0.2rem;
+        font-weight: 600;
     }
 
-    /* Streamlit Button Overrides */
+    /* Streamlit Button Styling */
     div.stButton > button {
-        background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%) !important;
-        color: #ffffff !important;
-        font-weight: 600 !important;
-        font-size: 1.05rem !important;
-        padding: 0.65rem 2rem !important;
+        background: linear-gradient(90deg, #f5c518 0%, #d4a017 100%) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        padding: 0.75rem 2rem !important;
         border-radius: 10px !important;
         border: none !important;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4) !important;
+        box-shadow: 0 4px 16px rgba(245, 197, 24, 0.35) !important;
         transition: all 0.2s ease-in-out !important;
         width: 100% !important;
+        margin-top: 0.5rem !important;
     }
 
     div.stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6) !important;
+        box-shadow: 0 6px 24px rgba(245, 197, 24, 0.55) !important;
+        background: linear-gradient(90deg, #f7d038 0%, #e2b616 100%) !important;
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; transform: scale(0.97); }
+        to { opacity: 1; transform: scale(1); }
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-# Model Loading with Streamlit Caching
+# Cache Model Pipeline Loading
 @st.cache_resource
 def load_sentiment_pipeline():
     """
     Load the trained scikit-learn Pipeline (TF-IDF + LinearSVC).
-    Checks relative paths for filename robustness.
     """
     possible_paths = [
         "IMDB_Sentiment_Model.pkl",
@@ -208,18 +281,22 @@ def load_sentiment_pipeline():
     return None, None
 
 
-# Main Application
 def main():
-    # Header Section
+    # Header Banner with IMDb branding
     st.markdown("""
-    <div class="main-header">
-        <h1>🎬 IMDb Movie Review Sentiment Analyzer</h1>
-        <p>Analyze the sentiment of a movie review using TF-IDF feature extraction and a Linear Support Vector Classifier (LinearSVC).</p>
+    <div class="imdb-header-container">
+        <div>
+            <span class="imdb-badge">IMDb</span>
+            <span class="main-title">Movie Review Sentiment Analyzer</span>
+        </div>
+        <div class="header-subtitle">
+            Instant binary sentiment classification using TF-IDF feature extraction and Linear Support Vector Classifier (LinearSVC).
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
     # Load Model Pipeline
-    pipeline, model_path = load_sentiment_pipeline()
+    pipeline, _ = load_sentiment_pipeline()
 
     if pipeline is None:
         st.error(
@@ -228,7 +305,7 @@ def main():
         )
         st.stop()
 
-    # Predefined IMDb Movie List (Fixed UI Context List)
+    # Predefined IMDb Movie List (Fixed UI Context)
     movie_list = [
         "The Shawshank Redemption (1994)",
         "The Godfather (1972)",
@@ -252,51 +329,51 @@ def main():
         "Avengers: Endgame (2019)"
     ]
 
-    # App Layout: 2 Columns (Main Input Column vs Model Info Sidebar/Column)
-    col_main, col_info = st.columns([7, 4], gap="large")
+    # TOP HALF: Side-by-Side Review Input (Left) & Sentiment Result (Right)
+    col_input, col_result = st.columns([6, 5], gap="large")
 
-    with col_main:
-        st.subheader("1. Movie Context")
+    with col_input:
+        st.markdown('<div class="section-header-title">📝 1. Enter Review</div>', unsafe_allow_html=True)
+
         selected_movie = st.selectbox(
-            "Select a movie to review:",
+            "Select Movie Context:",
             options=movie_list,
             index=0,
-            help="Select a movie for context. Note: Movie title is UI context only and is not passed to the ML model."
+            help="Movie title is UI context only and is not passed as a feature to the ML model."
         )
 
         st.markdown(f"""
         <div class="movie-banner">
-            🎥 <strong>Selected Context:</strong> {selected_movie}<br>
-            <small style="color: #cbd5e1;">The movie selection provides visual context. Only the review text below is analyzed by the LinearSVC model.</small>
+            🎬 <strong>Selected Context:</strong> {selected_movie}<br>
+            <span style="color: #cbd5e1; font-size: 0.85rem;">Title provides visual context only. The model analyzes the review text exclusively.</span>
         </div>
         """, unsafe_allow_html=True)
 
-        st.subheader("2. Write Movie Review")
         review_text = st.text_area(
-            "Movie Review Input",
-            placeholder="Write your review here... Tell us what you thought about the story, performances, direction, and cinematography.",
-            height=200,
+            "Movie Review Text",
+            placeholder="Write your review here... Tell us what you thought about the plot, direction, performances, and cinematography.",
+            height=180,
             label_visibility="collapsed"
         )
 
         analyze_clicked = st.button("🔍 Analyze Sentiment", use_container_width=True)
 
-        # Prediction Processing
+    with col_result:
+        st.markdown('<div class="section-header-title">🎯 2. Predicted Sentiment</div>', unsafe_allow_html=True)
+
+        # Process prediction if button was clicked
         if analyze_clicked:
             cleaned_text = review_text.strip()
             if not cleaned_text:
-                st.warning("⚠️ Please enter a movie review before clicking Analyze Sentiment.")
+                st.warning("⚠️ Please write a movie review before clicking Analyze Sentiment.")
             else:
-                with st.spinner("Analyzing review sentiment..."):
-                    # Pass ONLY the review text directly into the joblib Pipeline
+                with st.spinner("Classifying review text..."):
                     prediction = pipeline.predict([cleaned_text])[0]
-
-                st.markdown("### 3. Sentiment Analysis Result")
 
                 if prediction == 1:
                     st.markdown("""
                     <div class="result-card-positive">
-                        <div class="result-title">Predicted Sentiment</div>
+                        <div class="result-subtitle">Classification Result</div>
                         <div class="result-badge-positive">👍 POSITIVE</div>
                         <div class="result-explanation">The review expresses an overall positive sentiment.</div>
                     </div>
@@ -304,59 +381,73 @@ def main():
                 else:
                     st.markdown("""
                     <div class="result-card-negative">
-                        <div class="result-title">Predicted Sentiment</div>
+                        <div class="result-subtitle">Classification Result</div>
                         <div class="result-badge-negative">👎 NEGATIVE</div>
                         <div class="result-explanation">The review expresses an overall negative sentiment.</div>
                     </div>
                     """, unsafe_allow_html=True)
+        else:
+            # Default state before clicking analyze
+            st.markdown("""
+            <div class="result-placeholder">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.7;">🎬</div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.25rem;">Awaiting Review Input</div>
+                <div style="font-size: 0.9rem;">Write a movie review on the left and click <strong>Analyze Sentiment</strong> to view the real-time prediction here.</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    with col_info:
-        st.subheader("📊 Model Specifications")
+    # BOTTOM HALF: Full-width Model Specifications & Test Metrics
+    st.markdown("<br><hr style='border-color: rgba(255,255,255,0.1); margin-top: 1.5rem; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
+    st.markdown('<div class="section-header-title">📊 Model Specifications & Notebook Performance</div>', unsafe_allow_html=True)
 
+    spec_col1, spec_col2 = st.columns([5, 6], gap="large")
+
+    with spec_col1:
         st.markdown("""
-        <div class="content-card">
-            <h4 style="margin-top:0; color:#f59e0b;">Machine Learning Architecture</h4>
-            <ul style="padding-left: 1.2rem; color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
-                <li><strong>Classifier:</strong> Linear Support Vector Machine (<code>LinearSVC</code>)</li>
-                <li><strong>Vectorization:</strong> <code>TF-IDF</code> (Unigrams & Bigrams)</li>
-                <li><strong>Task:</strong> Binary Sentiment Classification</li>
+        <div class="spec-card">
+            <h4 style="margin-top:0; color:#f5c518; font-size:1.1rem;">Machine Learning Pipeline</h4>
+            <ul style="padding-left: 1.2rem; color: #cbd5e1; font-size: 0.92rem; line-height: 1.7; margin-bottom:0;">
+                <li><strong>Algorithm:</strong> Linear Support Vector Machine (<code>LinearSVC</code>, C=1.0)</li>
+                <li><strong>Representation:</strong> <code>TF-IDF</code> (Unigrams + Bigrams, Sublinear TF)</li>
+                <li><strong>Task:</strong> Binary Sentiment Classification (Positive / Negative)</li>
                 <li><strong>Dataset:</strong> IMDb Large Movie Review Dataset (50,000 samples)</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
 
+    with spec_col2:
         st.markdown("""
-        <div class="content-card">
-            <h4 style="margin-top:0; color:#38bdf8;">Final Test Evaluation Metrics</h4>
+        <div class="spec-card">
+            <h4 style="margin-top:0; color:#f5c518; font-size:1.1rem;">Final Test Evaluation Metrics</h4>
             <p style="font-size:0.85rem; color:#94a3b8; margin-bottom: 0.5rem;">
-                Evaluated on 25,000 held-out IMDb test reviews using five-fold cross-validated hyperparameter C = 1.0.
+                Evaluated on 25,000 held-out test reviews using 5-fold cross-validated hyperparameter C = 1.0.
             </p>
-            <div class="metric-grid">
-                <div class="metric-card">
-                    <div class="metric-value">88.89%</div>
-                    <div class="metric-label">Accuracy</div>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-val">88.89%</div>
+                    <div class="metric-lbl">Accuracy</div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">89.20%</div>
-                    <div class="metric-label">Precision</div>
+                <div class="metric-item">
+                    <div class="metric-val">89.20%</div>
+                    <div class="metric-lbl">Precision</div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">88.49%</div>
-                    <div class="metric-label">Recall</div>
+                <div class="metric-item">
+                    <div class="metric-val">88.49%</div>
+                    <div class="metric-lbl">Recall</div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">88.84%</div>
-                    <div class="metric-label">F1-Score</div>
+                <div class="metric-item">
+                    <div class="metric-val">88.84%</div>
+                    <div class="metric-lbl">F1-Score</div>
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
-        <div class="content-card" style="font-size: 0.85rem; color: #94a3b8;">
-            💡 <strong>Technical Note:</strong> <code>LinearSVC</code> optimizes a hinge loss decision boundary and does not output calibrated probabilities. The application displays precise binary classification without fabricating confidence percentages.
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 2rem;">
+        💡 <strong>Note on Model Decision Score:</strong> <code>LinearSVC</code> optimizes a maximum-margin hyperplane hinge loss and does not output probability distributions. Predictions represent strict binary classification.
+    </div>
+    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
