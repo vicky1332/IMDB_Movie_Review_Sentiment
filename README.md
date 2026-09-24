@@ -1,126 +1,150 @@
-# IMDb Movie Review Sentiment Analysis Using TF-IDF and Classical Machine Learning
-
-An interactive web application built with **Streamlit** to perform real-time binary sentiment classification on IMDb movie reviews using a classical machine learning pipeline (**TF-IDF + LinearSVC**).
-
----
+# IMDb Movie Review Sentiment Analysis Using TF-IDF and Machine Learning
 
 ## Project Overview
 
-Sentiment analysis of movie reviews is a fundamental natural language processing (NLP) task. The goal of this project is to analyze raw review text and accurately classify whether the viewer's sentiment is **Positive** or **Negative**.
+This project develops a classical machine learning model for binary
+sentiment classification of IMDb movie reviews. The model analyzes the
+textual content of a movie review and predicts whether the sentiment is
+**Positive** or **Negative**.
 
-This project demonstrates an end-to-end machine learning deployment workflow—from data preprocessing and feature extraction using Term Frequency-Inverse Document Frequency (TF-IDF) to model training with Linear Support Vector Classification (LinearSVC) and web deployment via Streamlit.
-
----
+The project uses **TF-IDF (Term Frequency-Inverse Document Frequency)**
+for text representation and a **Linear Support Vector Machine
+(LinearSVC)** for classification. The complete workflow is packaged into
+a scikit-learn Pipeline and integrated into a Streamlit application for
+interactive predictions.
 
 ## Dataset
 
-The model is trained and evaluated on the benchmark **IMDb Large Movie Review Dataset**:
+The project uses the **IMDb Large Movie Review Dataset**, a benchmark
+dataset for binary sentiment classification.
 
-- **Total Reviews:** 50,000 highly polar movie reviews.
-- **Training Set:** 25,000 labeled reviews.
-- **Test Set:** 25,000 labeled reviews.
-- **Classes:** Balanced 50/50 split between Positive and Negative reviews.
+Dataset characteristics:
 
----
+-   Total labeled reviews: 50,000
+-   Training reviews: 25,000
+-   Test reviews: 25,000
+-   Classes: Positive and Negative
+-   Task: Binary text classification
+-   Input: Movie review text
+-   Target: Sentiment
+
+The dataset also contains additional unlabeled reviews, which were not
+used in this supervised learning project.
 
 ## Machine Learning Workflow
 
-```mermaid
-flowchart LR
-    A[Raw Review Text] --> B[TF-IDF Vectorization]
-    B --> C[LinearSVC Classifier]
-    C --> D[Positive / Negative Sentiment]
+**Raw Movie Review → TF-IDF → LinearSVC → Positive / Negative**
+
+### TF-IDF Configuration
+
+-   Lowercase conversion
+-   English stop-word removal
+-   Unigrams and bigrams
+-   `min_df=2`
+-   `max_df=0.95`
+-   Sublinear term frequency
+
+### Model
+
+A Linear Support Vector Machine is used for sentiment classification.
+
+Five-fold cross-validation on the training dataset selected:
+
+``` text
+C = 1.0
 ```
 
-1. **Text Vectorization (`TF-IDF`):**
-   - Lowercasing & English stop-words removal
-   - Unigrams and Bigrams (`ngram_range=(1, 2)`)
-   - Term frequency filtering (`min_df=2`, `max_df=0.95`)
-   - Sublinear term frequency scaling (`sublinear_tf=True`)
-
-2. **Classifier (`LinearSVC`):**
-   - Linear Support Vector Machine (`C=1.0`, `random_state=42`)
-   - Selected via 5-fold cross-validation during notebook development.
-
-3. **Artifact Deployment:**
-   - The complete scikit-learn `Pipeline` (TF-IDF vectorizer + LinearSVC classifier) is serialized as `IMDB_Sentiment_Model.pkl` for fast, lightweight inference.
-
----
+No deep learning, transformers, embeddings, PCA, or TruncatedSVD are
+used.
 
 ## Model Evaluation
 
-The final model performance evaluated on the 25,000 held-out test reviews:
+The final model was evaluated on the held-out IMDb test dataset.
 
-| Metric | Score |
-| :--- | :--- |
-| **Accuracy** | **88.89%** |
-| **Precision** | **89.20%** |
-| **Recall** | **88.49%** |
-| **F1-Score** | **88.84%** |
+  Metric         Score
+  ----------- --------
+  Accuracy      88.89%
+  Precision     89.20%
+  Recall        88.49%
+  F1-score      88.84%
 
----
+Confusion matrix:
+
+``` text
+[[11161  1339]
+ [ 1439 11061]]
+```
 
 ## Streamlit Application
 
-The Streamlit web application allows users to:
-1. Select an iconic movie from a dropdown menu (e.g., *The Shawshank Redemption*, *The Dark Knight*, *Inception*).
-2. Enter a custom movie review.
-3. Click **Analyze Sentiment** to get an immediate sentiment prediction (**POSITIVE** or **NEGATIVE**).
+The Streamlit application allows users to:
 
-> 💡 **Important Note:** The selected movie title serves purely as UI visual context for the user experience. Only the raw review text is passed to the machine learning model.
+1.  Select a movie from a predefined list.
+2.  Enter a movie review.
+3.  Submit the review for analysis.
+4.  Receive a **Positive** or **Negative** sentiment prediction.
 
----
+The selected movie is UI context only and is not used as a machine
+learning feature.
 
-## How to Run Locally
+The application loads the complete scikit-learn Pipeline, containing
+both TF-IDF and LinearSVC, so raw review text can be passed directly to
+the model.
 
-### 1. Prerequisites
-Ensure Python 3.9+ is installed on your system.
-
-### 2. Clone the Repository
-```bash
-git clone https://github.com/YOUR_USERNAME/IMDb-Movie-Review-Sentiment.git
-cd IMDb-Movie-Review-Sentiment
-```
-
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Launch the Streamlit App
-```bash
-streamlit run app.py
-```
-
-The application will open automatically in your browser at `http://localhost:8501`.
-
----
-
-## Deployment on Streamlit Community Cloud
-
-To deploy this project online for free using **Streamlit Community Cloud**:
-
-1. **Push Code to GitHub:**
-   - Create a new repository on GitHub (e.g. `IMDb-Movie-Review-Sentiment`).
-   - Commit and push `app.py`, `IMDB_Sentiment_Model.pkl`, `requirements.txt`, and `README.md`.
-
-2. **Deploy via Streamlit Cloud:**
-   - Go to [share.streamlit.io](https://share.streamlit.io/).
-   - Sign in with your GitHub account.
-   - Click **New App**.
-   - Select your repository, branch (`main`), and main file path (`app.py`).
-   - Click **Deploy!**
-
----
+Because this implementation uses LinearSVC without probability
+calibration, the application does not display artificial confidence or
+probability percentages.
 
 ## Project Structure
 
-```text
+``` text
 IMDb-Movie-Review-Sentiment/
 │
-├── app.py                            # Streamlit web application
-├── IMDB_Sentiment_Model.pkl          # Serialized scikit-learn Pipeline (TF-IDF + LinearSVC)
-├── IMDB_Movie_Review_Sentiment_Analysis.ipynb  # Final research & training notebook
-├── requirements.txt                  # Python dependencies
-└── README.md                         # Project documentation
+├── app.py
+├── IMDb_Sentiment_Model.pkl
+├── requirements.txt
+├── README.md
+└── .gitignore
 ```
+
+## How to Run Locally
+
+``` bash
+git clone <repository-url>
+cd imdb-movie-review-sentiment
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+## Model Artifact
+
+The trained model is saved as:
+
+``` text
+IMDb_Sentiment_Model.pkl
+```
+
+The artifact contains the complete TF-IDF and LinearSVC Pipeline
+required for inference.
+
+The original IMDb dataset is not included in the repository.
+
+## Limitations
+
+-   Binary sentiment classification only.
+-   No probability or calibrated confidence score.
+-   The selected movie is not used as a prediction feature.
+-   Traditional TF-IDF features may struggle with sarcasm, ambiguity,
+    and complex contextual sentiment.
+
+## References
+
+-   IMDb Large Movie Review Dataset --- Stanford AI Lab
+-   Maas, A. L., et al. (2011). *Learning Word Vectors for Sentiment
+    Analysis*. Proceedings of ACL.
+-   scikit-learn documentation for `TfidfVectorizer`
+-   scikit-learn documentation for `LinearSVC`
+
+## Author
+
+**Trivikram Kambhampati**
